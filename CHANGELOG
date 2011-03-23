@@ -1,6 +1,10 @@
 Elasticfox Changelog
 --------------------
 
+1.7.000016-scrl002:
+- FIX: transparent context menus in Firefox 4
+- FIX: maxVersion 4.0 > 4.0.*
+
 1.7.000016-scrl001:
 - FEATURE: supports t1.micro, cc1.4xlarge and cg1.4xlarge instance types
 
