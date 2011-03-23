@@ -1,0 +1,55 @@
+Developing Elasticfox
+---------------------
+
+For a background on developing Firefox extensions see
+
+  http://developer.mozilla.org/en/docs/Extensions
+ 
+If this is your first extension, the very least you should do is setup your
+environment to make your life easier.
+
+  http://developer.mozilla.org/en/docs/Setting_up_extension_development_environment 
+
+The Elasticfox source is set up to make testing without building easy. The
+chrome.manifest file points Firefox at your local filesystem, not at the
+xpi package contents (this is adjusted at build time). Using the directions
+described in the above link, you can tell Firefox to run the extension from
+source.
+
+Essentially:
+
+ - Create a developr profile for Firefox if you don't want to tread all over your
+   default profile.
+
+   firefox -no-remote -p Developer
+
+ - In your Developer profile's extension directory, create a file named for the
+   Elasticfox extension GUID. Put inside it the path to the Elasticfox src
+   directory.
+
+   $ echo "$HOME/coding/elasticfox/trunk/src" > YOUR_FIREFOX_PROFILE/extensions/\{2204c510-88f3-11db-b606-0800200c9a66\} 
+
+ - Restart Firefox and navigate to 
+
+     chrome://ec2ui/content/ec2ui_main_window.xul 
+
+
+Building
+--------
+
+Building Elasticfox is quite straight-forward. It can be done on *NIX, Mac OS X and Windows (with Cygwin).
+
+Prerequisites:
+
+ - java, specifically the jar command
+ - JAVA_HOME should be set to the base Java install directory
+ 
+Building:
+
+ - run ./make.sh
+ 
+The make script will run the build.sh and package.sh scripts. These will create
+a dist directory which contains the .xpi and .zip files for distribution.
+
+
+

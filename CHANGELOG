@@ -1,0 +1,36 @@
+Elasticfox Changelog
+--------------------
+
+1.4.000074:
+
+- FEATURE: supports c1.medium and c1.xlarge instance types
+- IMPROVEMENT: when selecting an instance, select the associated kernel and
+  ramdisk images and ensure they're visible in the tree view.
+- IMPROVEMENT: Image, Kernel and Ramdisk views are all updated when any
+  individual one is.
+- IMPROVEMENT: remember selections when filter images.
+- IMPROVEMENT: supports Firefox 3.0
+
+1.4.000048:
+
+- FEATURE: supports EC2 API version 2008-02-01.
+- FEATURE: Full support for Availability Zones, Elastic IPs and
+  User-Selectable Kernels.
+- FEATURE: quick-search image lists.
+- FEATURE: opens in a new tab by default.
+- FEATURE: ssh to multiple instances at once.
+- FEATURE: platform-dependent defaults for ssh.
+- FIX: sf.net bug 1898177: Adding ICMP firewall rules requires filling in TCP
+  fields.
+- FIX: sf.net bug 1894182: Choosing security group while launching AMI
+  instance UI bug
+- FIX: sf.net bug 1944225: auto-update
+- FIX: redraw lists when sort order has changed.
+- FIX: better support for PPK when saving key files.
+- IMPROVEMENT: better error messages for ssh should help with setting custom ssh
+  details.
+
+1.3:
+
+- Initial public release as 'EC2UI Firefox Extension'
+
