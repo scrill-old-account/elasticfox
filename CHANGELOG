@@ -1,6 +1,11 @@
 Elasticfox Changelog
 --------------------
 
+1.7.000016-scrl001:
+- FEATURE: supports t1.micro, cc1.4xlarge and cg1.4xlarge instance types
+
+...
+
 1.4.000074:
 
 - FEATURE: supports c1.medium and c1.xlarge instance types

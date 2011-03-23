@@ -9,13 +9,11 @@ function get_dir_revision() {
     local last_rev
 
     # Generate a release number for the entire branch
-    last_rev=$(svn info $1 2>&1 | grep 'Last Changed Rev')
-    pkg_release=${last_rev#Last Changed Rev: }
-    if [ -z "$pkg_release" ] ; then
-    pkg_release=0
-    fi
+    pkg_release=16
+    scrl_version=`head -n1 ./SCRL-VERSION`
+
     # Left pad with zeroes to 6 columns
-    printf "%06d" ${pkg_release}
+    printf "%06d-scrl%03d" ${pkg_release} ${scrl_version}
 }
 
 function get_pkg_release() {
