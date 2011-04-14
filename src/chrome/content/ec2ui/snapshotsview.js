@@ -1,6 +1,6 @@
 var ec2ui_SnapshotTreeView = {
     COLNAMES: ['snap.id', 'snap.volumeId', 'snap.status', 'snap.startTime',
-              'snap.progress', 'snap.volumeSize', 'snap.description', 'snap.owner', 'snap.ownerAlias', 'snap.tag'],
+              'snap.progress', 'snap.volumeSize', 'snap.description', 'snap.amiId', 'snap.amiName', 'snap.owner', 'snap.ownerAlias', 'snap.tag'],
     imageIdRegex : new RegExp("^snap-"),
 
     getSearchText : function() {
@@ -22,8 +22,11 @@ var ec2ui_SnapshotTreeView = {
         var type = document.getElementById("ec2ui_SnapshotTreeView.snapshot.type").value;
         if (type == "my_snapshots") {
             var groups = ec2ui_model.getSecurityGroups();
+
+            if (groups) {
             var group = groups[0];
             var currentUser = ec2ui_session.lookupAccountId(group.ownerId);
+        }
         }
 
         var snapshots = ec2ui_model.snapshots;
@@ -38,7 +41,7 @@ var ec2ui_SnapshotTreeView = {
     },
 
     searchChanged : function(event) {
-        document.getElementById("ec2ui_SnapshotTreeView.snapshot.type").selectedIndex = 0;
+        document.getElementById("ec2ui_SnapshotTreeView.snapshot.type").selectedIndex = 1;
         if (this.searchTimer) {
             clearTimeout(this.searchTimer);
         }

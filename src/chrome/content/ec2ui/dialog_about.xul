@@ -18,14 +18,18 @@
   </script>
 
   <vbox flex="1">
-    <groupbox>
-      <description class="header">Elasticfox version __VERSION__ build __BUILD__ (EC2 API <html:span id="ec2ui.apiversion">API-VERSION</html:span>)</description>
-      <description><html:p>Elasticfox is a Firefox extension for interacting with Amazon's EC2 web service.</html:p></description>
-      <description><html:p><html:a target="_blank" href="" onclick="openURL('http://sourceforge.net/projects/elasticfox/'); return false" style="color: blue; text-decoration: underline">sourceforge.net/projects/elasticfox</html:a></html:p></description>
-    </groupbox>
     <vbox>
-      <description>Icons were provided by <html:a target="_blank" href="" onclick="openURL('http://www.mouserunner.com/'); return false" style="color: blue; text-decoration: underline">Ken Saunders</html:a>. </description>
+      <description class="header">Elasticfox version __VERSION__ build __BUILD__ (EC2 API <html:span id="ec2ui.apiversion">API-VERSION</html:span>)</description>
+      <description>Elasticfox is a Firefox extension for interacting with Amazon's EC2 web service.</description>
+      <description></description>
+      <description><html:a target="_blank" href="" onclick="openURL('http://sourceforge.net/projects/elasticfox/'); return false" style="color: blue; text-decoration: underline">sourceforge.net/projects/elasticfox</html:a></description>
+      <description><html:a target="_blank" href="" onclick="openURL('https://bitbucket.org/winebarrel/elasticfox-ec2tag/'); return false" style="color: blue; text-decoration: underline">bitbucket.org/winebarrel/elasticfox-ec2tag</html:a></description>
+      <description></description>
+    </vbox>
+    <vbox>
+      <description>Icons were provided by <html:a target="_blank" href="" onclick="openURL('http://www.mouserunner.com/'); return false" style="color: blue; text-decoration: underline">Ken Saunders</html:a>.</description>
       <description>Elasticfox is licensed under the <html:a target="_blank" href="" onclick="openURL('http://www.apache.org/licenses/'); return false" style="color: blue; text-decoration: underline">Apache 2.0</html:a> license.</description>
+      <description>Maintenance by Scrill (<html:a target="_blank" href="" onclick="openURL('https://github.com/Scrill/elasticfox/'); return false" style="color: blue; text-decoration: underline">github.com/Scrill/elasticfox</html:a>).</description>
     </vbox>
   </vbox>
 </dialog>

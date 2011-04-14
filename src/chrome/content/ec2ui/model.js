@@ -60,7 +60,10 @@ function Snapshot(id, volumeId, status, startTime, progress, volumeSize, descrip
     this.owner = owner;
     this.ownerAlias = ownerAlias;
 
-    if (tag) this.tag = tag;
+    if (tag) {
+        this.tag = tag;
+        __addNameTagToModel__(tag, this);
+    }
 }
 
 function Volume(id, size, snapshotId, zone, status, createTime, instanceId, device, attachStatus, attachTime, tag) {
@@ -76,7 +79,10 @@ function Volume(id, size, snapshotId, zone, status, createTime, instanceId, devi
     if (attachStatus != "") {
       this.attachTime = attachTime.strftime('%Y-%m-%d %H:%M:%S');
     }
-    if (tag) this.tag = tag;
+    if (tag) {
+      this.tag = tag;
+      __addNameTagToModel__(tag, this);
+    }
 }
 
 function Instance(resId, ownerId, groupList, instanceId, imageId, kernelId,
@@ -100,13 +106,18 @@ function Instance(resId, ownerId, groupList, instanceId, imageId, kernelId,
     this.launchTime = launchTime;
     this.launchTimeDisp = launchTime.strftime('%Y-%m-%d %H:%M:%S');
 
-    this.groups = this.groupList.join(', ');
+    this.groups = this.groupList.sort().join(', ');
 
     this.placement = placement;
     this.platform = platform;
     this.vpcId = vpcId;
     this.subnetId = subnetId;
-    if (tag) this.tag = tag;
+
+    if (tag) {
+        this.tag = tag;
+        __addNameTagToModel__(tag, this);
+    }
+
     this.rootDeviceType = rootDeviceType;
 }
 
@@ -403,12 +414,60 @@ var ec2ui_model = {
     },
 
     updateVolumes : function(list) {
+        if (!this.instances) {
+            ec2ui_session.controller.describeInstances();
+        }
+
         this.volumes = list;
+
+        if (this.instances && list) {
+            var instanceNames = new Object();
+
+            for (var i = 0; i < this.instances.length; i++) {
+                var instance = this.instances[i];
+                instanceNames[instance.id] = instance.name;
+            }
+
+            for (var i = 0; i < list.length; i++) {
+                var volume = list[i];
+                volume.instanceName = instanceNames[volume.instanceId];
+            }
+        }
+
         this.notifyComponents("volumes");
     },
 
     updateSnapshots : function(list) {
+        if (!this.images) {
+            ec2ui_session.controller.describeImages();
+        }
+
         this.snapshots = list;
+
+        if (this.images && list) {
+            var amiNames = new Object();
+
+            for (var i = 0; i < this.images.length; i++) {
+                var image = this.images[i];
+                amiNames[image.id] = image.name;
+            }
+
+            for (var i = 0; i < list.length; i++) {
+                var snapshot = list[i];
+                var snapshotAmiId = null;
+                var m = null;
+
+                if (snapshot.description && (m = snapshot.description.match(/\bami-\w+\b/))) {
+                    snapshotAmiId = m[0];
+                }
+
+                if (snapshotAmiId) {
+                    snapshot.amiId = snapshotAmiId;
+                    snapshot.amiName = amiNames[snapshotAmiId];
+                }
+            }
+        }
+
         this.notifyComponents("snapshots");
     },
 
@@ -521,7 +580,26 @@ var ec2ui_model = {
     },
 
     updateAddresses : function(list) {
+        if (!this.instances) {
+            ec2ui_session.controller.describeInstances();
+        }
+
         this.addresses = list;
+
+        if (this.instances && list) {
+            var instanceNames = new Object();
+
+            for (var i = 0; i < this.instances.length; i++) {
+                var instance = this.instances[i];
+                instanceNames[instance.id] = instance.name;
+            }
+
+            for (var i = 0; i < list.length; i++) {
+                var address = list[i];
+                address.instanceName = instanceNames[address.instanceid];
+            }
+        }
+
         this.notifyComponents("addresses");
     },
 

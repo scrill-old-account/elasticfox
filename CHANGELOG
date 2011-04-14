@@ -1,6 +1,18 @@
 Elasticfox Changelog
 --------------------
 
+1.7.000016-scrl003:
+Taken from the elasticfox-ec2tag (https://bitbucket.org/winebarrel/elasticfox-ec2tag/):
+  - FEATURE: EC2 tags
+  - FEATURE: extra permissions in security groups
+  - FEATURE: user-data view/edit
+  - FEATURE: termination protection
+  - FEATURE: new regions
+  - FEATURE: Elasticfox panel button
+- FIX: auto update issue
+- FIX: maxVersion 5.0
+- FIX: about dialog
+
 1.7.000016-scrl002:
 - FIX: transparent context menus in Firefox 4
 - FIX: maxVersion 4.0 > 4.0.*

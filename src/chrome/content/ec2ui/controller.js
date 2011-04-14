@@ -124,6 +124,7 @@ var ec2ui_controller = {
         var xmlDoc = objResponse.xmlDoc;
 
         var list = new Array();
+        var tags = new Object();
         var items = xmlDoc.evaluate("/ec2:DescribeVolumesResponse/ec2:volumeSet/ec2:item",
                                     xmlDoc,
                                     this.getNsResolver(),
@@ -155,9 +156,11 @@ var ec2ui_controller = {
                 attachTime.setISO8601(getNodeValueByName(items.snapshotItem(i), "attachTime"));
             }
             list.push(new Volume(id, size, snapshotId, zone, status, createTime, instanceId, device, attachStatus, attachTime));
+
+            this.walkTagSet(items.snapshotItem(i), "volumeId", tags);
         }
 
-        this.addResourceTags(list, ec2ui_session.model.resourceMap.volumes, "id");
+        this.addEC2Tag(list, "id", tags);
         ec2ui_model.updateVolumes(list);
         if (objResponse.callback)
             objResponse.callback(list);
@@ -171,6 +174,7 @@ var ec2ui_controller = {
         var xmlDoc = objResponse.xmlDoc;
 
         var list = new Array();
+        var tags = new Object();
         var items = xmlDoc.evaluate("/ec2:DescribeSnapshotsResponse/ec2:snapshotSet/ec2:item",
                                     xmlDoc,
                                     this.getNsResolver(),
@@ -188,9 +192,11 @@ var ec2ui_controller = {
             var ownerId = getNodeValueByName(items.snapshotItem(i), "ownerId")
             var ownerAlias = getNodeValueByName(items.snapshotItem(i), "ownerAlias")
             list.push(new Snapshot(id, volumeId, status, startTime, progress, volumeSize, description, ownerId, ownerAlias));
+
+            this.walkTagSet(items.snapshotItem(i), "snapshotId", tags);
         }
 
-        this.addResourceTags(list, ec2ui_session.model.resourceMap.snapshots, "id");
+        this.addEC2Tag(list, "id", tags);
         ec2ui_model.updateSnapshots(list);
         if (objResponse.callback)
             objResponse.callback(list);
@@ -661,6 +667,7 @@ var ec2ui_controller = {
         var xmlDoc = objResponse.xmlDoc;
 
         var list = new Array();
+        var tags = new Object();
         var img = null;
         var items = xmlDoc.evaluate("/ec2:DescribeImagesResponse/ec2:imagesSet/ec2:item",
                                     xmlDoc,
@@ -700,9 +707,12 @@ var ec2ui_controller = {
                           name,
                           description,
                           snapshotId));
+
+
+            this.walkTagSet(items.snapshotItem(i), "imageId", tags);
         }
 
-        this.addResourceTags(list, ec2ui_session.model.resourceMap.images, "id");
+        this.addEC2Tag(list, "id", tags);
         ec2ui_model.updateImages(list);
         if (objResponse.callback)
             objResponse.callback(list);
@@ -1123,6 +1133,7 @@ var ec2ui_controller = {
         var xmlDoc = objResponse.xmlDoc;
 
         var list = new Array();
+        var tags = new Object();
         var items = xmlDoc.evaluate("/ec2:DescribeInstancesResponse/ec2:reservationSet/ec2:item",
                                     xmlDoc,
                                     this.getNsResolver(),
@@ -1142,13 +1153,55 @@ var ec2ui_controller = {
             if (instanceItems) {
                 var resList = this.unpackReservationInstances(resId, ownerId, groups, instanceItems);
                 list = list.concat(resList);
+
+                for (var j = 0; j < instanceItems.length; j++) {
+                    var instanceItem = instanceItems[j];
+
+                    if (instanceItem.nodeName == '#text') {
+                        continue;
+                    }
+
+                    this.walkTagSet(instanceItem, "instanceId", tags);
+                }
             }
         }
 
-        this.addResourceTags(list, ec2ui_session.model.resourceMap.instances, "id");
+        this.addEC2Tag(list, "id", tags);
         ec2ui_model.updateInstances(list);
         if (objResponse.callback)
             objResponse.callback(list);
+    },
+
+    walkTagSet : function(item, idName, tags) {
+        var instanceId = getNodeValueByName(item, idName);
+        var tagSet = item.getElementsByTagName("tagSet")[0];
+
+        if (tagSet) {
+            var tagSetItems = tagSet.getElementsByTagName("item");
+            var tagArray = new Array();
+            var nameTag = null;
+
+            for (var i= 0; i < tagSetItems.length; i++) {
+                var tagSetItem = tagSetItems[i];
+                var tagSetItemKey = getNodeValueByName(tagSetItem, "key");
+                var tagSetItemValue = getNodeValueByName(tagSetItem, "value");
+                var keyValue = tagSetItemKey + ":" + tagSetItemValue;
+
+                if (tagSetItemKey == "Name") {
+                    nameTag = keyValue;
+                } else {
+                    tagArray.push(keyValue);
+                }
+            }
+
+            tagArray.sort();
+
+            if (nameTag) {
+                tagArray.unshift(nameTag);
+            }
+
+            tags[instanceId] = tagArray.join(", ");
+        }
     },
 
     addResourceTags : function (list, resourceType, attribute) {
@@ -1175,6 +1228,27 @@ var ec2ui_controller = {
         }
         // Now that we've built the new set of instance tags, persist them
         ec2ui_session.setResourceTags(resourceType, new_tags);
+    },
+
+    addEC2Tag : function (list, attribute, tags) {
+        if (!list || list.length == 0) {
+            return;
+        }
+
+        if (!tags) {
+            return;
+        }
+
+        var res = null;
+        var tag = null;
+        for (var i in list) {
+            res = list[i];
+            tag = tags[res[attribute]];
+            if (tag && tag.length) {
+                res.tag = tag
+                __addNameTagToModel__(tag, res);
+            }
+        }
     },
 
     retrieveBundleTaskFromResponse : function (item) {
@@ -1788,11 +1862,14 @@ var ec2ui_controller = {
         ec2_httpclient.queryEC2("AuthorizeSecurityGroupIngress", params, this, true, "onCompleteAuthorizeSecurityGroupIngress", callback);
     },
 
-    authorizeSourceGroup : function (groupName, sourceSecurityGroupName, sourceSecurityGroupOwnerId, callback) {
+    authorizeSourceGroup : function (groupName, ipProtocol, fromPort, toPort, sourceSecurityGroupName, sourceSecurityGroupOwnerId, callback) {
         var params = []
         params.push(["GroupName", groupName]);
-        params.push(["SourceSecurityGroupName", sourceSecurityGroupName]);
-        params.push(["SourceSecurityGroupOwnerId", sourceSecurityGroupOwnerId]);
+        params.push(["IpPermissions.1.IpProtocol", ipProtocol]);
+        params.push(["IpPermissions.1.FromPort", fromPort]);
+        params.push(["IpPermissions.1.ToPort", toPort]);
+        params.push(["IpPermissions.1.Groups.1.GroupName", sourceSecurityGroupName]);
+        params.push(["IpPermissions.1.Groups.1.UserId", sourceSecurityGroupOwnerId]);
         ec2_httpclient.queryEC2("AuthorizeSecurityGroupIngress", params, this, true, "onCompleteAuthorizeSecurityGroupIngress", callback);
     },
 
@@ -1811,11 +1888,14 @@ var ec2ui_controller = {
         ec2_httpclient.queryEC2("RevokeSecurityGroupIngress", params, this, true, "onCompleteRevokeSecurityGroupIngress", callback);
     },
 
-    revokeSourceGroup : function (groupName, sourceSecurityGroupName, sourceSecurityGroupOwnerId, callback) {
+    revokeSourceGroup : function (groupName, ipProtocol, fromPort, toPort, sourceSecurityGroupName, sourceSecurityGroupOwnerId, callback) {
         var params = []
         params.push(["GroupName", groupName]);
-        params.push(["SourceSecurityGroupName", sourceSecurityGroupName]);
-        params.push(["SourceSecurityGroupOwnerId", sourceSecurityGroupOwnerId]);
+        params.push(["IpPermissions.1.IpProtocol", ipProtocol]);
+        params.push(["IpPermissions.1.FromPort", fromPort]);
+        params.push(["IpPermissions.1.ToPort", toPort]);
+        params.push(["IpPermissions.1.Groups.1.GroupName", sourceSecurityGroupName]);
+        params.push(["IpPermissions.1.Groups.1.UserId", sourceSecurityGroupOwnerId]);
         ec2_httpclient.queryEC2("RevokeSecurityGroupIngress", params, this, true, "onCompleteRevokeSecurityGroupIngress", callback);
     },
 
@@ -1979,5 +2059,113 @@ var ec2ui_controller = {
         }
 
         eval("this."+responseObject.requestType+"(responseObject)");
+    },
+
+    createTags : function (resIds, tags, callback) {
+        var params = new Array();
+
+        for (var i = 0; i < resIds.length; i++) {
+            params.push(["ResourceId." + (i + 1)   , resIds[i]]);
+            params.push(["Tag." + (i + 1) + ".Key"  , tags[i][0]]);
+            params.push(["Tag." + (i + 1) + ".Value", tags[i][1]]);
+        }
+
+        ec2_httpclient.queryEC2("CreateTags", params, this, true, "onCompleteCreateTags", callback);
+    },
+
+    onCompleteCreateTags : function (objResponse) {
+        if (objResponse.callback) {
+            objResponse.callback();
+        }
+    },
+
+    deleteTags : function (resIds, keys, callback) {
+        var params = new Array();
+
+        for (var i = 0; i < resIds.length; i++) {
+            params.push(["ResourceId." + (i + 1), resIds[i]]);
+            params.push(["Tag." + (i + 1) + ".Key", keys[i]]);
+        }
+
+        ec2_httpclient.queryEC2("DeleteTags", params, this, true, "onCompleteDeleteTags", callback);
+    },
+
+    onCompleteDeleteTags : function (objResponse) {
+        if (objResponse.callback) {
+            objResponse.callback();
+        }
+    },
+
+    describeTags : function (resIds, callback) {
+        var params = new Array();
+
+        for (var i = 0; i < resIds.length; i++) {
+            params.push(["Filter." + (i + 1) + ".Name", "resource-id"]);
+            params.push(["Filter." + (i + 1) + ".Value.1", resIds[i]]);
+        }
+
+        ec2_httpclient.queryEC2("DescribeTags", params, this, true, "onCompleteDescribeTags", callback);
+    },
+
+    onCompleteDescribeTags : function (objResponse) {
+        var xmlDoc = objResponse.xmlDoc;
+        var items = xmlDoc.evaluate("/ec2:DescribeTagsResponse/ec2:tagSet/ec2:item",
+                                    xmlDoc,
+                                    this.getNsResolver(),
+                                    XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
+                                    null);
+
+        var tags = new Array();
+
+        for (var i = 0; i < items.snapshotLength; ++i) {
+            var resid = getNodeValueByName(items.snapshotItem(i), "resourceId");
+            var key = getNodeValueByName(items.snapshotItem(i), "key");
+            var value = getNodeValueByName(items.snapshotItem(i), "value");
+            tags.push([resid, key, value]);
+        }
+
+        if (objResponse.callback) {
+            objResponse.callback(tags);
+        }
+    },
+
+
+    describeInstanceAttribute : function (instanceId, attribute, callback) {
+        var params = new Array();
+        params.push(["InstanceId", instanceId]);
+        params.push(["Attribute", attribute]);
+        ec2_httpclient.queryEC2("DescribeInstanceAttribute", params, this, true, "onCompleteDescribeInstanceAttribute", callback);
+    },
+
+    onCompleteDescribeInstanceAttribute : function (objResponse) {
+        var xmlDoc = objResponse.xmlDoc;
+        var items = xmlDoc.evaluate("/ec2:DescribeInstanceAttributeResponse/*",
+                                       xmlDoc,
+                                       this.getNsResolver(),
+                                       XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
+                                       null);
+
+        var value = getNodeValueByName(items.snapshotItem(2), "value");
+
+        if (objResponse.callback) {
+            objResponse.callback(value);
+        }
+    },
+
+    modifyInstanceAttribute : function (instanceId, attribute, callback) {
+        var params = new Array();
+        var name = attribute[0];
+        var value = attribute[1];
+
+        params.push(["InstanceId", instanceId]);
+        params.push([name + ".Value", value]);
+
+        ec2_httpclient.queryEC2("ModifyInstanceAttribute", params, this, true, "onCompleteModifyInstanceAttribute", callback);
+    },
+
+    onCompleteModifyInstanceAttribute : function (objResponse) {
+        if (objResponse.callback) {
+            objResponse.callback();
+        }
     }
 };

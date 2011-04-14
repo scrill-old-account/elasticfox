@@ -62,6 +62,8 @@ var ec2ui_AMIsTreeView = {
         this.ownerDisplayFilter = "";
         if (type.value == "my_ami" || type.value == "my_ami_rdt_ebs") {
             var groups = ec2ui_model.getSecurityGroups();
+
+            if (groups) {
             var group = groups[0];
             var currentUser = ec2ui_session.lookupAccountId(group.ownerId);
             this.imageIdRegex = regExs["ami"];
@@ -70,6 +72,7 @@ var ec2ui_AMIsTreeView = {
               this.rootDeviceType = "";
             else
               this.rootDeviceType = "ebs";
+            }
         } else if (type.value == "amzn" || type.value == "amzn_rdt_ebs") {
             this.ownerDisplayFilter = "amazon";
 
@@ -130,7 +133,7 @@ var ec2ui_AMIsTreeView = {
     },
 
     searchChanged : function(event) {
-        document.getElementById("ec2ui_AMIsTreeView.image.type").selectedIndex = 0;
+        document.getElementById("ec2ui_AMIsTreeView.image.type").selectedIndex = 1;
         if (this.searchTimer) {
             clearTimeout(this.searchTimer);
         }
@@ -148,6 +151,7 @@ var ec2ui_AMIsTreeView = {
                 inst = list[i];
                 inst.tag = tag;
                 ec2ui_session.setResourceTag(inst.id, tag);
+                __tagging2ec2__([inst.id], ec2ui_session, tag);
             }
         }
         if (ec2ui_prefs.isRefreshOnChangeEnabled()) {

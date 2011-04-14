@@ -251,6 +251,7 @@ var ec2ui_session =
             // be invalidated or refreshed
             this.tabSelectionChanged();
         } else {
+            /*
             // There are no credentials in the system.
             // Let's ask the user to enter them
             var promptService =
@@ -261,7 +262,7 @@ var ec2ui_session =
             // if the user says no, the return value will not be 0.
             // In this case, just fall out
             if (promptService.confirmEx(
-                    window,
+                    null,
                     "AWS Credentials Needed",
                     text,
                     promptService.STD_YES_NO_BUTTONS |
@@ -276,6 +277,7 @@ var ec2ui_session =
             } else {
                 this.manageCredentials();
             }
+            */
         }
     },
 

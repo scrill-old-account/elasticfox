@@ -13,11 +13,26 @@
           <menuitem oncommand="ec2ui_InstancesTreeView.viewDetails(event);"
             label="&ec2ui.contextmenu.details.label;" />
           <menuitem oncommand="ec2ui_InstancesTreeView.tag(event);"
-            label="Add Tag" />
+            label="Edit EC2 Tag" />
           <menuseparator />
+          <menu label="Instance Lifecycle">
+            <menupopup>
           <menuitem id="instances.context.start"
             oncommand="ec2ui_InstancesTreeView.startInstance();"
             label="Start" />
+              <menuitem oncommand="ec2ui_InstancesTreeView.rebootInstance();"
+                label="Reboot" />
+              <menuitem id="instances.context.stop"
+                oncommand="ec2ui_InstancesTreeView.stopInstance();"
+                label="Stop" />
+              <menuitem id="instances.context.forceStop"
+                oncommand="ec2ui_InstancesTreeView.forceStopInstance();"
+                label="Force Stop" />
+              <menuitem oncommand="ec2ui_InstancesTreeView.terminateInstance();"
+                label="Terminate" style="color:red; font-weight:bold;"/>
+            </menupopup>
+          </menu>
+          <menuseparator />
           <menuitem oncommand="ec2ui_InstancesTreeView.launchMore();"
             label="Launch More of these" />
           <menuitem oncommand="ec2ui_InstancesTreeView.associateWithEIP();"
@@ -30,16 +45,19 @@
           <menuitem id="instances.context.createimage"
             oncommand="ec2ui_InstancesTreeView.showCreateImageDialog();"
             label="Create Image (EBS AMI)" />
-          <menuitem oncommand="ec2ui_InstancesTreeView.rebootInstance();"
-            label="Reboot" />
-          <menuitem oncommand="ec2ui_InstancesTreeView.terminateInstance();"
-            label="Terminate" />
-          <menuitem id="instances.context.stop"
-            oncommand="ec2ui_InstancesTreeView.stopInstance();"
-            label="Stop" />
-          <menuitem id="instances.context.forceStop"
-            oncommand="ec2ui_InstancesTreeView.forceStopInstance();"
-            label="Force Stop" />
+          <menuitem id="instances.context.changeUserData"
+            oncommand="ec2ui_InstancesTreeView.changeUserData();"
+            label="View/Change User Data" />
+          <menu label="Termination Protection">
+            <menupopup>
+              <menuitem id="instances.context.showTerminationProtection"
+                oncommand="ec2ui_InstancesTreeView.showTerminationProtection();"
+                label="Show Termination Protection" />
+              <menuitem id="instances.context.changeTerminationProtection"
+                oncommand="ec2ui_InstancesTreeView.changeTerminationProtection();"
+                label="Change Termination Protection" />
+            </menupopup>
+          </menu>
           <menuseparator />
           <menuitem oncommand="ec2ui_InstancesTreeView.fetchConsoleOutput();"
             label="Show Console Output" />
@@ -47,6 +65,8 @@
             oncommand="ec2ui_InstancesTreeView.getAdminPassword(false);"
             label="Get Administrator Password" />
           <menuseparator />
+          <menu label="Copy to clipboard">
+            <menupopup>
           <menuitem oncommand="ec2ui_InstancesTreeView.copyToClipBoard('id');"
             label="&ec2ui.instances.contextmenu.copyid.label;" />
           <menuitem oncommand="ec2ui_InstancesTreeView.copyToClipBoard('publicDnsName');"
@@ -55,6 +75,8 @@
             label="Copy Private DNS Name to clipboard" />
           <menuitem oncommand="ec2ui_InstancesTreeView.copyToClipBoard('privateIpAddress');"
             label="Copy Private IP Address to clipboard" />
+            </menupopup>
+          </menu>
           <menuseparator />
           <menuitem id="instances.context.connect"
             oncommand="ec2ui_InstancesTreeView.connectToSelectedInstances();"
@@ -94,16 +116,24 @@
             tooltiptext="&ec2ui.instances.connect.tip;" />
           <toolbarbutton image="images/info.png" style="-moz-box-pack:center;"
             oncommand="ec2ui_InstancesTreeView.tag();"
-            tooltiptext="Add Tag" />
+            tooltiptext="Edit EC2 Tag" />
           <checkbox id="ec2ui.instances.noterminated" label="Don't show Terminated Instances"
             checked="false" oncommand="ec2ui_InstancesTreeView.invalidate();"/>
         </hbox>
       </toolbar>
 
+      <!--
       <tree id="ec2ui.instances.view" ondblclick="ec2ui_InstancesTreeView.viewDetails(event)"
         onselect="ec2ui_InstancesTreeView.selectionChanged(event)"
         enableColumnDrag="true" flex="1">
+        -->
+      <tree id="ec2ui.instances.view"
+        onselect="ec2ui_InstancesTreeView.selectionChanged(event)"
+        enableColumnDrag="true" flex="1">
         <treecols>
+          <treecol id="instance.name" label="Name"
+            flex="2" persist="width ordinal hidden sortDirection" />
+          <splitter class="tree-splitter" />
           <treecol id="instance.resId" label="&ec2ui.instances.resid.label;"
             flex="2" persist="width ordinal hidden sortDirection" />
           <splitter class="tree-splitter" />
