@@ -1,6 +1,10 @@
 Elasticfox Changelog
 --------------------
 
+1.7.000016-scrl004:
+- FIX: 'Copy Public DNS Name to clipboard' in the instance context menu root
+- FIX: Back to 'No Filter' default filter in the images tab
+
 1.7.000016-scrl003:
 Taken from the elasticfox-ec2tag (https://bitbucket.org/winebarrel/elasticfox-ec2tag/):
   - FEATURE: EC2 tags
