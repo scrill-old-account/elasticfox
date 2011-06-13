@@ -29,7 +29,7 @@
     <vbox>
       <description>Icons were provided by <html:a target="_blank" href="" onclick="openURL('http://www.mouserunner.com/'); return false" style="color: blue; text-decoration: underline">Ken Saunders</html:a>.</description>
       <description>Elasticfox is licensed under the <html:a target="_blank" href="" onclick="openURL('http://www.apache.org/licenses/'); return false" style="color: blue; text-decoration: underline">Apache 2.0</html:a> license.</description>
-      <description>Maintenance by Scrill (<html:a target="_blank" href="" onclick="openURL('https://github.com/Scrill/elasticfox/'); return false" style="color: blue; text-decoration: underline">github.com/Scrill/elasticfox</html:a>).</description>
+      <description>Maintainer: <html:a target="_blank" href="" onclick="openURL('https://github.com/Scrill/elasticfox/'); return false" style="color: blue; text-decoration: underline">Scrill</html:a>.</description>
     </vbox>
   </vbox>
 </dialog>
