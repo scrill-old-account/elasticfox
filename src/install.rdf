@@ -24,7 +24,7 @@
     <em:description>A graphical interface to Amazon's EC2 web service.</em:description>
     <em:creator>James Greenfield (icons originally by Ken Saunders http://www.mouserunner.com)</em:creator>
     <em:homepageURL>http://ec2.amazonaws.com</em:homepageURL>
-    <em:updateURL>https://github.com/scrill/elasticfox/raw/master/src/ec2ui.rdf</em:updateURL>
+    <em:updateURL>https://github.com/scrill/elasticfox/raw/master/ec2ui.rdf</em:updateURL>
   </Description>
 
   <Description about="urn:mozilla:extension:file:ec2ui.jar"

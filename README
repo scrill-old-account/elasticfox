@@ -4,30 +4,63 @@ JavaScript.
 
 Usage:
 
-The extension can be installed by opening the .xpi file contained in the archive that includes
-this README file. Alternatively, the latest version of the .xpi file is hosted in Amazon
-S3 at the following URL:
+  The extension can be installed by opening the .xpi file contained in the archive that includes
+  this README file. Alternatively, the latest version of the .xpi file is hosted in Amazon
+  S3 at the following URL:
 
   http://s3.amazonaws.com/ec2-downloads/ec2ui.xpi
 
-If you visit the link above using Mozilla Firefox you will be prompted regarding the
-installation of the extension.
+  If you visit the link above using Mozilla Firefox you will be prompted regarding the
+  installation of the extension.
 
 Prerequisites:
 
-This extension requires Mozilla Firefox version 1.5.0 or later.
+  This extension requires Mozilla Firefox version 1.5.0 or later.
 
 Source Code:
 
-The full source code is available at http://sourceforge.net/projects/elasticfox/
+  The full source code is available at http://sourceforge.net/projects/elasticfox/
 
-The .xpi file is really just a renamed ZIP archive. Your garden variety ZIP utilities can be 
-used to unzip it. Within this archive you will find a file named ec2ui.jar. This is also just
-a renamed JAR archive so you can explore it in the same way. This JAR file contains the bulk
-of the interesting source code. Highlights include:
+  The .xpi file is really just a renamed ZIP archive. Your garden variety ZIP utilities can be 
+  used to unzip it. Within this archive you will find a file named ec2ui.jar. This is also just
+  a renamed JAR archive so you can explore it in the same way. This JAR file contains the bulk
+  of the interesting source code. Highlights include:
 
   content/ec2ui/client.js
     This file contains the logic to construct and sign requests to Amazon EC2.
 
   content/ec2ui/controller.js
     This file wraps client.js and includes logic to unpack Amazon EC2 responses.
+
+
+Changelog:
+
+1.7.000016-scrl005:
+Taken from the elasticfox-ec2tag (https://bitbucket.org/winebarrel/elasticfox-ec2tag/):
+  - FEATURE: Change instance type
+- FIX: AKI/ARI search issue
+- FIX: Auto update again
+- FIX: changelog of scrl-builds moved to readme file
+
+1.7.000016-scrl004:
+- FIX: 'Copy Public DNS Name to clipboard' in the instance context menu root
+- FIX: Back to 'No Filter' default filter in the images tab
+
+1.7.000016-scrl003:
+Taken from the elasticfox-ec2tag (https://bitbucket.org/winebarrel/elasticfox-ec2tag/):
+  - FEATURE: EC2 tags
+  - FEATURE: extra permissions in security groups
+  - FEATURE: user-data view/edit
+  - FEATURE: termination protection
+  - FEATURE: new regions
+  - FEATURE: Elasticfox panel button
+- FIX: auto update issue
+- FIX: maxVersion 5.0
+- FIX: about dialog
+
+1.7.000016-scrl002:
+- FIX: transparent context menus in Firefox 4
+- FIX: maxVersion 4.0 > 4.0.*
+
+1.7.000016-scrl001:
+- FEATURE: supports t1.micro, cc1.4xlarge and cg1.4xlarge instance types

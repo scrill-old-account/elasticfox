@@ -1,31 +1,6 @@
 Elasticfox Changelog
 --------------------
 
-1.7.000016-scrl004:
-- FIX: 'Copy Public DNS Name to clipboard' in the instance context menu root
-- FIX: Back to 'No Filter' default filter in the images tab
-
-1.7.000016-scrl003:
-Taken from the elasticfox-ec2tag (https://bitbucket.org/winebarrel/elasticfox-ec2tag/):
-  - FEATURE: EC2 tags
-  - FEATURE: extra permissions in security groups
-  - FEATURE: user-data view/edit
-  - FEATURE: termination protection
-  - FEATURE: new regions
-  - FEATURE: Elasticfox panel button
-- FIX: auto update issue
-- FIX: maxVersion 5.0
-- FIX: about dialog
-
-1.7.000016-scrl002:
-- FIX: transparent context menus in Firefox 4
-- FIX: maxVersion 4.0 > 4.0.*
-
-1.7.000016-scrl001:
-- FEATURE: supports t1.micro, cc1.4xlarge and cg1.4xlarge instance types
-
-...
-
 1.4.000074:
 
 - FEATURE: supports c1.medium and c1.xlarge instance types
