@@ -36,6 +36,9 @@ Source Code:
 Changelog:
 
 1.7.000016-scrl005:
+- FIX: 'cc1.4xlarge' and 'cg1.4xlarge' added to instance type dialog
+
+1.7.000016-scrl005:
 Taken from the elasticfox-ec2tag (https://bitbucket.org/winebarrel/elasticfox-ec2tag/):
   - FEATURE: Change instance type
 - FIX: AKI/ARI search issue

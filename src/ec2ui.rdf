@@ -13,7 +13,7 @@
               <id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</id>
               <minVersion>2.0</minVersion>
               <maxVersion>5.0</maxVersion>
-              <updateLink>https://github.com/downloads/scrill/elasticfox/elasticfox-__VERSION__-__BUILD__.xpi</updateLink>
+              <updateLink>https://github.com/downloads/Scrill/elasticfox/elasticfox-__VERSION__.__BUILD__.xpi</updateLink>
             </r:Description>
           </targetApplication>
         </r:Description>
