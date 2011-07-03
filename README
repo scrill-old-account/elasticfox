@@ -35,6 +35,12 @@ Source Code:
 
 Changelog:
 
+1.7.000016-scrl007:
+Taken from the elasticfox-ec2tag (https://bitbucket.org/winebarrel/elasticfox-ec2tag/):
+  - FEATURE: Register AMI from snapshot
+  - FIX: Tag volume when creting
+- FIX: maxVersion 6.0
+
 1.7.000016-scrl006:
 - FIX: 'cc1.4xlarge' and 'cg1.4xlarge' added to instance type dialog
 
