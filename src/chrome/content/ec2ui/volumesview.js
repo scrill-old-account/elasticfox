@@ -36,7 +36,24 @@ var ec2ui_VolumeTreeView = {
 
     invalidate : function() {
         var target = ec2ui_VolumeTreeView;
-        target.displayImages(target.filterImages(ec2ui_model.volumes));
+        var list = (ec2ui_model.volumes || []);
+        var filterRootDev = document.getElementById("ec2ui.volumes.norootdev").checked;
+
+        if (filterRootDev) {
+          var newList = [];
+
+          for (var i = 0; i < list.length; i++) {
+            var volume = list[i];
+
+            if (volume.device != '/dev/sda1') {
+              newList.push(volume);
+            }
+          }
+
+          list = newList;
+        }
+
+        target.displayImages(target.filterImages(list));
     },
 
     searchChanged : function(event) {
@@ -125,6 +142,8 @@ var ec2ui_VolumeTreeView = {
             var me = this;
             var wrap = function(id) {
                 me.refresh();
+                document.getElementById('ec2ui.volumes.search').value = '';
+                me.invalidate();
                 me.selectByImageId(id);
             }
             ec2ui_session.controller.createVolume(retVal.size,
@@ -150,7 +169,8 @@ var ec2ui_VolumeTreeView = {
     deleteVolume : function () {
         var image = this.getSelectedImage();
         if (image == null) return;
-        var confirmed = confirm("Delete volume " + image.id + "?");
+        var label = image.name ? (image.name + '@' + image.id) : image.id;
+        var confirmed = confirm("Delete volume " + label + "?");
         if (!confirmed)
             return;
         var wrap = function() {

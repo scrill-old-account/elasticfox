@@ -35,10 +35,19 @@ Source Code:
 
 Changelog:
 
+1.7.000016-scrl008:
+Taken from the elasticfox-ec2tag (https://bitbucket.org/winebarrel/elasticfox-ec2tag/):
+  - FEATURE: new variables in tools dialog
+  - FEATURE: 'copy public dns name' in eip context menu
+  - FEATURE: 'hide stopped' in instances tab
+  - FEATURE: 'hide /dev/sda1' in volumes
+  - FEATURE: 'hide ami snapshots' in snapshots
+- FIX: maxVersion up to 8.0
+
 1.7.000016-scrl007:
 Taken from the elasticfox-ec2tag (https://bitbucket.org/winebarrel/elasticfox-ec2tag/):
   - FEATURE: Register AMI from snapshot
-  - FIX: Tag volume when creting
+  - FIX: Tag volume when creating
 - FIX: maxVersion 6.0
 
 1.7.000016-scrl006:

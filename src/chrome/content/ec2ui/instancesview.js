@@ -187,8 +187,9 @@ var ec2ui_InstancesTreeView = {
         // No longer need to lowercase this because the patt is created with "i"
         var searchText = this.getSearchText();
         var filterTerm = document.getElementById("ec2ui.instances.noterminated").checked;
+        var filterStop = document.getElementById("ec2ui.instances.nostopped").checked;
         if (searchText.length == 0 &&
-            !filterTerm) {
+            !(filterTerm || filterStop)) {
             return instances;
         }
 
@@ -199,6 +200,10 @@ var ec2ui_InstancesTreeView = {
             inst = instances[i];
             if (filterTerm &&
                 inst.state == "terminated") {
+                continue;
+            }
+            if (filterStop &&
+                inst.state == "stopped") {
                 continue;
             }
             if (inst.id.match(this.instanceIdRegex) &&
@@ -1142,6 +1147,16 @@ var ec2ui_InstancesTreeView = {
             );
     },
 
+    showInstancesSummary : function() {
+        window.openDialog(
+            "chrome://ec2ui/content/dialog_summary.xul",
+            null,
+            "chrome,centerscreen,modal",
+            this.instanceList,
+            ec2ui_session.getActiveEndpoint().name
+            );
+    },
+
     copyToClipBoard : function(fieldName) {
         var instance = this.getSelectedInstance();
         if (instance == null) {
@@ -1396,6 +1411,10 @@ outer:
 
         // ${host}
         argStr = argStr.replace(/\${host}/g, hostname);
+        argStr = argStr.replace(/\${publicDnsName}/g, instance.publicDnsName);
+        argStr = argStr.replace(/\${privateDnsName}/g, instance.privateDnsName);
+        argStr = argStr.replace(/\${privateIpAddress}/g, instance.privateIpAddress);
+        argStr = argStr.replace(/\${name}/g, instance.name);
 
         // Finally, split args into an array
         var args = tokenise(argStr);

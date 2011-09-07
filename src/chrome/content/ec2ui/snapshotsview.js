@@ -29,7 +29,23 @@ var ec2ui_SnapshotTreeView = {
         }
         }
 
-        var snapshots = ec2ui_model.snapshots;
+        var snapshots = (ec2ui_model.snapshots || []);
+        var filterAMI = document.getElementById("ec2ui.snapshots.noami").checked;
+
+        if (filterAMI) {
+          var newSnapshots = [];
+
+          for (var i = 0; i < snapshots.length; i++) {
+            var snap = snapshots[i];
+
+            if (!(snap.amiId || '').trim()) {
+              newSnapshots.push(snap);
+            }
+          }
+
+          snapshots = newSnapshots;
+        }
+
         snapshots = this.filterImages(snapshots, currentUser);
 
         this.displayImages(snapshots);
@@ -65,7 +81,8 @@ var ec2ui_SnapshotTreeView = {
     deleteSnapshot : function () {
         var image = this.getSelectedImage();
         if (image == null) return;
-        var confirmed = confirm("Delete snapshot " + image.id + "?");
+        var label = image.name ? (image.name + '@' + image.id) : image.id;
+        var confirmed = confirm("Delete snapshot " + label + "?");
         if (!confirmed)
             return;
         var me = this;
