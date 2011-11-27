@@ -446,6 +446,22 @@ function __addNameTagToModel__(tag, model) {
     model.name = null;
 }
 
+function __tagToName__(tag) {
+    var kvs = (tag || '').split(/\s*,\s*/);
+
+    for (var i = 0; i < kvs.length; i++) {
+        var kv = kvs[i].split(/\s*:\s*/, 2);
+        var key = kv[0].trim();
+        var value = (kv[1] || "").trim();
+
+        if (key == "Name") {
+            return value;
+        }
+    }
+
+    return null;
+}
+
 function __concatTags__(a, b) {
     if (!a) { a = ""; }
     if (!b) { b = ""; }
@@ -579,10 +595,30 @@ var ec2ui_utils = {
         // eu-west-1: region is EU-WEST-1
         if (str.indexOf("us-west-1") >= 0) {
             region = "US-WEST-1";
+        } else if (str.indexOf("us-west-2") >= 0) {
+            region = "US-WEST-2";
         } else if (str.indexOf("eu-west-1") >= 0 || str == "eu") {
             region = "EU-WEST-1";
+        } else if (str.indexOf("ap-southeast-1")) {
+            region = "AP-SOUTHEAST-1";
+        } else if (str.indexOf("ap-northeast-1")) {
+            region = "AP-NORTHEAST-1";
         }
 
         return region;
+    },
+    getMessageProperty : function(key, replacements) {
+        if ( !this._stringBundle ) {
+            const BUNDLE_SVC = Components.classes['@mozilla.org/intl/stringbundle;1'].getService(Components.interfaces.nsIStringBundleService);
+            this._stringBundle = BUNDLE_SVC.createBundle("chrome://ec2ui/locale/ec2ui.properties");
+        }
+        try {
+            if ( !replacements )
+                return this._stringBundle.GetStringFromName(key);
+            else
+                return this._stringBundle.formatStringFromName(key, replacements, replacements.length);
+        } catch(e) {
+            return "";
     }
+    },
 };

@@ -51,7 +51,7 @@ var ec2_EBSVolumeAttacher = {
         var volumes = this.ec2ui_session.model.getVolumes();
         var vol = null;
         var label = null;
-        var tag = null;
+        var name = null;
         for(var i in volumes) {
             vol = volumes[i];
             // A volume can be attached to this instance only if:
@@ -61,9 +61,10 @@ var ec2_EBSVolumeAttacher = {
                 vol.instanceId.length == 0) {
                 this.volList.push(vol);
                 label = vol.id;
-                tag = vol.tag;
-                if (tag && tag.length) {
-                    label = label + ":" + tag;
+                name = __tagToName__(vol.tag);
+
+                if (name && name.length) {
+                    label = label + ":" + name;
                 }
                 volMenu.appendItem(label);
             }
