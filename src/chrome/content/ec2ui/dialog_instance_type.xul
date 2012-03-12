@@ -13,9 +13,9 @@
   <menulist id="instance-type-dialog-instance-type">
     <menupopup>
       <menuitem label="t1.micro" value="t1.micro" />
-      <menuseparator />
-      <menuitem label="m1.small (32-bit only)" value="m1.small" />
-      <menuitem label="c1.medium (32-bit only)" value="c1.medium" />
+      <menuitem label="m1.small" value="m1.small" />
+      <menuitem label="m1.medium" value="m1.medium" />
+      <menuitem label="c1.medium" value="c1.medium" />
       <menuseparator />
       <menuitem label="m1.large (64-bit only)" value="m1.large" />
       <menuitem label="m1.xlarge (64-bit only)" value="m1.xlarge" />
@@ -25,6 +25,7 @@
       <menuitem label="m2.4xlarge (64-bit only)" value="m2.4xlarge" />
       <menuitem label="cc1.4xlarge (64-bit only)" value="cc1.4xlarge" />
       <menuitem label="cg1.4xlarge (64-bit only)" value="cg1.4xlarge" />
+      <menuitem label="cc2.8xlarge (64-bit only)" value="cc2.8xlarge" />
     </menupopup>
   </menulist>
 

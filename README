@@ -35,6 +35,9 @@ Source Code:
 
 Changelog:
 
+1.7.000016-scrl010:
+  - FEATURE: New instance types: m1.small, m1.medium, c1.medium and cc2.8xlarge
+
 1.7.000016-scrl009:
 Taken from the elasticfox-ec2tag (https://bitbucket.org/winebarrel/elasticfox-ec2tag/):
   - FEATURE: Elastic Load Balancers
